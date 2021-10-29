@@ -29,6 +29,14 @@ router.post('/', validateActions, (req, res, next) => {
         .catch(next);
 });
 
+router.put('/:id', validateActionId, validateActions, (req, res, next) => {
+    Actions.update(req.params.id, req.action)
+        .then(updatedAction => {
+            res.json(updatedAction);
+        })
+        .catch(next);
+});
+
 // eslint-disable-next-line no-unused-vars
 router.use((err, req, res, next,) => {
     res.status(500 || err.status).json({
