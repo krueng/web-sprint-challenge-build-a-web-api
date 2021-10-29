@@ -1,7 +1,6 @@
 const Projects = require('./projects-model');
 
 async function validateProjectId(req, res, next) {
-    // console.log('object------------xxx-------------', req.body);
     try {
         const project = await Projects.get(req.params.id);
         if (!project) {
@@ -22,13 +21,10 @@ async function validateProjectId(req, res, next) {
 function validateProject(req, res, next) {
     const { name, description, completed } = req.body;
     if (!name || !name.trim() || !description || typeof completed !== 'boolean') {
-        console.log('object-------------------------', req.body);
         res.status(400).json({
             message: 'name and description are required'
         });
     } else {
-         console.log('object---------eeee----------------', req.body);
-        // req.name = name.trim();
         req.project = req.body;
         next();
     }
