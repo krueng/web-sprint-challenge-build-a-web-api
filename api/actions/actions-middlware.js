@@ -19,17 +19,20 @@ async function validateActionId(req, res, next) {
     }
 }
 
+
 function validateActions(req, res, next) {
-    const { text } = req.body;
-    if (!text || !text.trim()) {
+    const { project_id, description, notes, completed } = req.body;
+    if (!project_id || !description || !notes || typeof completed !== 'boolean') {
+        console.log('--------if-------------rb', req.body);
         res.status(400).json({
-            message: 'missing required action field'
+            message: 'Project id, description, and notes are required'
         });
     } else {
-        req.text = text.trim();
+        console.log('------------else---------rb', req.body);
+        req.action = req.body;
         next();
     }
-
 }
+
 
 module.exports = { validateActionId, validateActions };
