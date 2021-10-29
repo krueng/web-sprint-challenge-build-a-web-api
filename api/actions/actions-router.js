@@ -10,8 +10,8 @@ const router = express.Router();
 
 router.get('/', (req, res, next) => {
     Actions.get()
-        .then(project => {
-            res.json(project);
+        .then(actions => {
+            res.json(actions);
         })
         .catch(next);
 });
@@ -21,7 +21,7 @@ router.get('/:id', validateActionId, (req, res) => {
 });
 
 router.post('/', validateActions, (req, res, next) => {
-    Actions.insert(req.action)
+    Actions.insert(req.body)
         .then(newAction => {
             res.status(201).json(newAction);
         })
@@ -29,7 +29,7 @@ router.post('/', validateActions, (req, res, next) => {
 });
 
 router.put('/:id', validateActionId, validateActions, (req, res, next) => {
-    Actions.update(req.params.id, req.action)
+    Actions.update(req.params.id, req.body)
         .then(updatedAction => {
             res.json(updatedAction);
         })
@@ -38,8 +38,12 @@ router.put('/:id', validateActionId, validateActions, (req, res, next) => {
 
 router.delete('/:id', validateActionId, async (req, res, next) => {
     try {
-        await Actions.remove(req.params.id);
-        res.json(req.action);
+        const deleted = await Actions.remove(req.params.id);
+        if (deleted) {
+            res.json(req.action);
+        } else {
+            next();
+        }
     } catch (err) {
         next(err);
     }

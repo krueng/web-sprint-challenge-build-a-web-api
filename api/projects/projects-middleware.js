@@ -1,4 +1,5 @@
 const Projects = require('./projects-model');
+const { isNotEmptyString } = require('../utils');
 
 async function validateProjectId(req, res, next) {
     try {
@@ -20,12 +21,14 @@ async function validateProjectId(req, res, next) {
 
 function validateProject(req, res, next) {
     const { name, description, completed } = req.body;
-    if (!name || !name.trim() || !description || typeof completed !== 'boolean') {
+
+    if (!isNotEmptyString(name) ||
+        !isNotEmptyString(description) ||
+        typeof completed !== 'boolean') {
         res.status(400).json({
-            message: 'name and description are required'
+            message: 'Proper name and description are required'
         });
     } else {
-        req.project = req.body;
         next();
     }
 }

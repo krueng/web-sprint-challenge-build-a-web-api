@@ -1,4 +1,5 @@
 const Actions = require('./actions-model');
+const { isNotEmptyString } = require('../utils');
  
 async function validateActionId(req, res, next) {
     try {
@@ -20,12 +21,19 @@ async function validateActionId(req, res, next) {
 
 function validateActions(req, res, next) {
     const { project_id, description, notes, completed } = req.body;
-    if (!project_id || !description || !notes || typeof completed !== 'boolean') {
+
+    if (typeof project_id !== 'number') {
         res.status(400).json({
-            message: 'Project id, description, and notes are required'
+            message: 'Project ID must be a number'
+        });
+    } else if (!isNotEmptyString(description) ||
+        !isNotEmptyString(notes) ||
+        typeof completed !== 'boolean'
+    ) {
+        res.status(400).json({
+            message: 'Malformed project completed, description, or notes'
         });
     } else {
-        req.action = req.body;
         next();
     }
 }

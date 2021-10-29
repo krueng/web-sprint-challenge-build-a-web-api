@@ -10,8 +10,8 @@ const router = express.Router();
 
 router.get('/', (req, res, next) => {
     Projects.get()
-        .then(project => {
-            res.json(project);
+        .then(projects => {
+            res.json(projects);
         })
         .catch(next);
 });
@@ -21,7 +21,7 @@ router.get('/:id', validateProjectId, (req, res) => {
 });
 
 router.post('/', validateProject, (req, res, next) => {
-    Projects.insert(req.project)
+    Projects.insert(req.body)
         .then(newProject => {
             res.status(201).json(newProject);
         })
@@ -29,7 +29,7 @@ router.post('/', validateProject, (req, res, next) => {
 });
 
 router.put('/:id', validateProjectId, validateProject, (req, res, next) => {
-    Projects.update(req.params.id, req.project)
+    Projects.update(req.params.id, req.body)
         .then(updatedProject => {
             res.json(updatedProject);
         })
@@ -38,8 +38,13 @@ router.put('/:id', validateProjectId, validateProject, (req, res, next) => {
 
 router.delete('/:id', validateProjectId, async (req, res, next) => {
     try {
-        await Projects.remove(req.params.id);
-        res.json(req.project);
+        const deleted = await Projects.remove(req.params.id);
+
+        if (deleted) {
+            res.json(req.project);
+        } else {
+            next();
+        }
     } catch (err) {
         next(err);
     }
@@ -47,8 +52,8 @@ router.delete('/:id', validateProjectId, async (req, res, next) => {
 
 router.get('/:id/actions', validateProjectId, async (req, res, next) => {
     try {
-        const result = await Projects.getProjectActions(req.params.id);
-        res.json(result);
+        const actions = await Projects.getProjectActions(req.params.id);
+        res.json(actions);
     } catch (err) {
         next(err);
     }
