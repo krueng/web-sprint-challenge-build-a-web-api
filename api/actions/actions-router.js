@@ -8,7 +8,6 @@ const Actions = require('./actions-model');
 
 const router = express.Router();
 
-
 router.get('/', (req, res, next) => {
     Actions.get()
         .then(project => {
@@ -35,6 +34,15 @@ router.put('/:id', validateActionId, validateActions, (req, res, next) => {
             res.json(updatedAction);
         })
         .catch(next);
+});
+
+router.delete('/:id', validateActionId, async (req, res, next) => {
+    try {
+        await Actions.remove(req.params.id);
+        res.json(req.action);
+    } catch (err) {
+        next(err);
+    }
 });
 
 // eslint-disable-next-line no-unused-vars
