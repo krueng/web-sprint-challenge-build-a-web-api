@@ -45,6 +45,14 @@ router.delete('/:id', validateProjectId, async (req, res, next) => {
     }
 });
 
+router.get('/:id/actions', validateProjectId, async (req, res, next) => {
+    try {
+        const result = await Projects.getProjectActions(req.params.id);
+        res.json(result);
+    } catch (err) {
+        next(err);
+    }
+});
 
 // eslint-disable-next-line no-unused-vars
 router.use((err, req, res, next,) => {
