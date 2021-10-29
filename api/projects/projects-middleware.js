@@ -20,14 +20,14 @@ async function validateProjectId(req, res, next) {
 }
 
 function validateProject(req, res, next) {
-    const { name, description } = req.body;
-    if (!name || !name.trim() || !description) {
-        // console.log('object-------------------------', req.body);
+    const { name, description, completed } = req.body;
+    if (!name || !name.trim() || !description || typeof completed !== 'boolean') {
+        console.log('object-------------------------', req.body);
         res.status(400).json({
             message: 'name and description are required'
         });
     } else {
-        // console.log('object---------eeee----------------', req.body);
+         console.log('object---------eeee----------------', req.body);
         // req.name = name.trim();
         req.project = req.body;
         next();

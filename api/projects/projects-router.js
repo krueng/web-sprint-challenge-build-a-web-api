@@ -21,14 +21,30 @@ router.get('/:id', validateProjectId, (req, res) => {
 });
 
 router.post('/', validateProject, (req, res, next) => {
-    //  console.log("req---------", req.project);
     Projects.insert(req.project)
         .then(newProject => {
-            // console.log('--------tuatua---------',newProject);
             res.status(201).json(newProject);
         })
         .catch(next);
 });
+
+router.put('/:id', validateProjectId, validateProject, (req, res, next) => {
+    Projects.update(req.params.id, req.project)
+        .then(updatedProject => {
+            res.json(updatedProject);
+        })
+        .catch(next);
+});
+
+router.delete('/:id', validateProjectId, async (req, res, next) => {
+    try {
+        await Projects.remove(req.params.id);
+        res.json(req.project);
+    } catch (err) {
+        next(err);
+    }
+});
+
 
 // eslint-disable-next-line no-unused-vars
 router.use((err, req, res, next,) => {
