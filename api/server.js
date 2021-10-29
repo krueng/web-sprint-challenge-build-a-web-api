@@ -6,4 +6,21 @@ const server = express();
 // Build your projects router in /api/projects/projects-router.js
 // Do NOT `server.listen()` inside this file!
 
+// const postsRouter = require('./posts/posts-router')
+// const { logger, validatePost, validateUser, validateUserId } = require('./middleware/middleware')
+// const usersRouter = require('./users/users-router')
+
+const projectsRouter = require('./projects/projects-router');
+
+server.use(express.json());
+// server.use(logger)
+// server.use('/api/users', usersRouter)
+
+server.use('/api/projects', projectsRouter);
+
+server.get('/', (req, res) => {
+    res.send(`<h2>This is Sprint Challenge!</h2>`);
+});
+
+
 module.exports = server;
